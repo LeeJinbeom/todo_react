@@ -39,7 +39,8 @@ INSTALLED_APPS = [
     #installed
     'rest_framework',
     #app
-    'account'
+    'account',
+    'study'
 ]
 
 MIDDLEWARE = [
