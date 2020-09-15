@@ -1,99 +1,176 @@
 from django.shortcuts import render, get_object_or_404
 from django.http import Http404
-from rest_framework import status
-from rest_framework.decorators import api_view
+from rest_framework import status, viewsets
+from rest_framework.viewsets import ModelViewSet, ReadOnlyModelViewSet
+from rest_framework.decorators import api_view, action
 from rest_framework.views import APIView
 from .models import Students, Scores
 from .serializers import StudentSerializer, ScoreSerializer
 from rest_framework.response import Response
 
 
-class StudentView(APIView):
 
-    def get(self, request):
-        qs = Students.objects.all()
-        serializer = StudentSerializer(qs, many=True)
+class StudentView(ModelViewSet):
+
+    queryset = Students.objects.all()
+    serializer_class = StudentSerializer
+
+    def get_queryset(self):
+        qs = super().get_queryset()
+        name = self.request.query_params.get('name')
+        math = self.request.query_params.get('math')
+        science = self.request.query_params.get('science')
+        if name:
+            qs = qs.filter(name=name)
+        if math:
+            qs = qs.filter(math__gt=math)
+        return qs
+
+    #기본URL/incheon
+    @action(detail=False, methods=['GET'])
+    def incheon(self, requset):
+        qs = self.get_queryset().filter(address__contains='인천') # like '%인천%'
+        serializer = self.get_serializer(qs, many=True)
         return Response(serializer.data)
 
-    def post(self, request):
-        serializer = StudentSerializer(data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-class StudentDetailView(APIView):
-
-    def get_object(self, pk):
-
-        # return get_object_or_404(Students, pk=pk)
-
-        try:
-            student = Students.objects.get(pk=pk)
-        except:
-            raise Http404()
-        return student
-
-    def get(self, request, pk):
-        student = self.get_object(pk)
-        serializer = StudentSerializer(student)
+    #기본URL/pk/init
+    @action(detail=True, methods=['PUT'])
+    def init(self, requset, pk):
+        instance = self.get_object()
+        instance.address = ""
+        instance.email = ""
+        instance.save(update_fields=['address','email'])
+        serializer = self.get_serializer(instance)
         return Response(serializer.data)
 
-    def put(self, request, pk):
-        student = self.get_object(pk)
 
-        print(request.data)
+class ScoreView(ModelViewSet):
+    queryset = Scores.objects.all() #전체데이터를 조회하는
+    serializer_class = ScoreSerializer
 
-        serializer = StudentSerializer(student, data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data)
-        return Response(serializer.errors, status=400)
+    # 오버라이딩
+    def get_queryset(self):
+        #Scores.objects.all()
+        qs = super().get_queryset() # SELECT * FROM scores
 
-    def delete(self, request, pk):
-        student = self.get_object(pk)
-        student.delete()
-        return Response(status=204)
+        name = self.request.query_params.get('name')
+        math = self.request.query_params.get('math')
+        science = self.request.query_params.get('science')
+        english = self.request.query_params.get('english')
+        order = self.request.query_params.get('order')
 
+        if name:
+            qs = qs.filter(name=name) # SELECT * FROM scores WHERE name = name
+        if math:
+            qs = qs.filter(math__gte=math)
+        if science:
+            qs = qs.filter(math__gte=science)
+        if english:
+            qs = qs.filter(math__gte=english)
+        if order:
+            qs = qs.order_by(order)
 
-class ScoreView(APIView):
+        return qs
 
-    def get(self, request):
-        score = Scores.objects.all() #메모리
-        serializer = ScoreSerializer(score, many=True) #메모리(Object) -> 텍스트
+    #PUT, DETAIL GET, DELETE (PK)
+    #LIST, LIST 0, 1, >=
+    @action(detail=False, methods=['GET'])
+    def top(self, request):
+        qs = self.get_queryset().filter(math__gte=80, english__gte=80, science__gte=80)
+        #ScoreSerializer
+        serializer = self.get_serializer(qs, many=True)
         return Response(serializer.data)
 
-    def post(self, request):
-        serializer = ScoreSerializer(data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data, status=201)
-        return Response(serializer.errors, status=400)
 
 
 
-class ScoreDetailView(APIView):
 
-    def get_object(self, id):
-        return get_object_or_404(Scores, id=id)
+# class StudentView(APIView):
 
-    def get(self, request, id):
-        score = self.get_object(id)
-        serializer = ScoreSerializer(score)
-        return Response(serializer.data)
+#     def get(self, request):
+#         qs = Students.objects.all()
+#         serializer = StudentSerializer(qs, many=True)
+#         return Response(serializer.data)
 
-    def put(self, request, id):
-        score = self.get_object(id)
-        serializer = ScoreSerializer(score, data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data)
-        return Response(serializer.errors, status=400)
+#     def post(self, request):
+#         serializer = StudentSerializer(data=request.data)
+#         if serializer.is_valid():
+#             serializer.save()
+#             return Response(serializer.data, status=status.HTTP_201_CREATED)
+#         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-    def delete(self, request, id):
-        score = self.get_object(id)
-        score.delete()
-        return Response(status=204)
+# class StudentDetailView(APIView):
+
+#     def get_object(self, pk):
+
+#         # return get_object_or_404(Students, pk=pk)
+
+#         try:
+#             student = Students.objects.get(pk=pk)
+#         except:
+#             raise Http404()
+#         return student
+
+#     def get(self, request, pk):
+#         student = self.get_object(pk)
+#         serializer = StudentSerializer(student)
+#         return Response(serializer.data)
+
+#     def put(self, request, pk):
+#         student = self.get_object(pk)
+
+#         print(request.data)
+
+#         serializer = StudentSerializer(student, data=request.data)
+#         if serializer.is_valid():
+#             serializer.save()
+#             return Response(serializer.data)
+#         return Response(serializer.errors, status=400)
+
+#     def delete(self, request, pk):
+#         student = self.get_object(pk)
+#         student.delete()
+#         return Response(status=204)
+
+
+# class ScoreView(APIView):
+
+#     def get(self, request):
+#         score = Scores.objects.all() #메모리
+#         serializer = ScoreSerializer(score, many=True) #메모리(Object) -> 텍스트
+#         return Response(serializer.data)
+
+#     def post(self, request):
+#         serializer = ScoreSerializer(data=request.data)
+#         if serializer.is_valid():
+#             serializer.save()
+#             return Response(serializer.data, status=201)
+#         return Response(serializer.errors, status=400)
+
+
+
+# class ScoreDetailView(APIView):
+
+#     def get_object(self, id):
+#         return get_object_or_404(Scores, id=id)
+
+#     def get(self, request, id):
+#         score = self.get_object(id)
+#         serializer = ScoreSerializer(score)
+#         return Response(serializer.data)
+
+#     def put(self, request, id):
+#         score = self.get_object(id)
+#         serializer = ScoreSerializer(score, data=request.data)
+#         if serializer.is_valid():
+#             serializer.save()
+#             return Response(serializer.data)
+#         return Response(serializer.errors, status=400)
+
+#     def delete(self, request, id):
+#         score = self.get_object(id)
+#         score.delete()
+#         return Response(status=204)
         
 
 
