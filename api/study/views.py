@@ -5,8 +5,54 @@ from rest_framework.viewsets import ModelViewSet, ReadOnlyModelViewSet
 from rest_framework.decorators import api_view, action
 from rest_framework.views import APIView
 from .models import Students, Scores
-from .serializers import StudentSerializer, ScoreSerializer
+from .serializers import StudentBasicSerializer, ScoresBasicSerializer, StudentSerializer, ScoreSerializer
 from rest_framework.response import Response
+
+
+@api_view(['GET','POST'])
+def ScoreBasicView(request):
+    if request.method == 'GET':
+        scores = Scores.objects.all()
+        print('1')
+        serializer = ScoresBasicSerializer(scores, many=True)
+        print('2')
+        return Response(serializer.data)
+    elif request.method == 'POST':
+        serializer = ScoresBasicSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=201)
+        return Response(serializer.errors, status=400)
+
+
+@api_view(['GET','POST'])
+def StudentBasicView(request):
+    if request.method == 'GET':
+        student = Students.objects.all()
+        serializer = StudentSerializer(student, many=True)
+        return Response(serializer.data)
+    elif request.method == 'POST':
+        serializer = StudentSerializer(data=request.data)
+        if serializer.is_valid():
+            #가공
+            serializer.save(memo="이건테스트입니다.")
+            return Response(serializer.data, status=201)
+        return Response(serializer.errors, status=400)
+
+@api_view(['PUT'])
+def StudentDetailBasicView(request, pk):
+    if request.method == 'PUT':
+        student = Students.objects.get(pk=pk)
+        #student 원래데이터
+        #request.data 사람이 보내준 데이터
+        #(원래데이터 <- 사람이 보내준 데이터) -> SAVE 
+        serializer = StudentBasicSerializer(student, data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors, status=400)
+
+
 
 
 
@@ -15,33 +61,33 @@ class StudentView(ModelViewSet):
     queryset = Students.objects.all()
     serializer_class = StudentSerializer
 
-    def get_queryset(self):
-        qs = super().get_queryset()
-        name = self.request.query_params.get('name')
-        math = self.request.query_params.get('math')
-        science = self.request.query_params.get('science')
-        if name:
-            qs = qs.filter(name=name)
-        if math:
-            qs = qs.filter(math__gt=math)
-        return qs
+    # def get_queryset(self):
+    #     qs = super().get_queryset()
+    #     name = self.request.query_params.get('name')
+    #     math = self.request.query_params.get('math')
+    #     science = self.request.query_params.get('science')
+    #     if name:
+    #         qs = qs.filter(name=name)
+    #     if math:
+    #         qs = qs.filter(math__gt=math)
+    #     return qs
 
-    #기본URL/incheon
-    @action(detail=False, methods=['GET'])
-    def incheon(self, requset):
-        qs = self.get_queryset().filter(address__contains='인천') # like '%인천%'
-        serializer = self.get_serializer(qs, many=True)
-        return Response(serializer.data)
+    # #기본URL/incheon
+    # @action(detail=False, methods=['GET'])
+    # def incheon(self, requset):
+    #     qs = self.get_queryset().filter(address__contains='인천') # like '%인천%'
+    #     serializer = self.get_serializer(qs, many=True)
+    #     return Response(serializer.data)
 
-    #기본URL/pk/init
-    @action(detail=True, methods=['PUT'])
-    def init(self, requset, pk):
-        instance = self.get_object()
-        instance.address = ""
-        instance.email = ""
-        instance.save(update_fields=['address','email'])
-        serializer = self.get_serializer(instance)
-        return Response(serializer.data)
+    # #기본URL/pk/init
+    # @action(detail=True, methods=['PUT'])
+    # def init(self, requset, pk):
+    #     instance = self.get_object()
+    #     instance.address = ""
+    #     instance.email = ""
+    #     instance.save(update_fields=['address','email'])
+    #     serializer = self.get_serializer(instance)
+    #     return Response(serializer.data)
 
 
 class ScoreView(ModelViewSet):
