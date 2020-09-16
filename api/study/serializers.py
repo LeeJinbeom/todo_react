@@ -1,4 +1,5 @@
 from rest_framework.serializers import ModelSerializer, Serializer
+from rest_framework.validators import ValidationError
 from rest_framework import serializers
 from .models import Students, Scores
 from django.contrib.auth import get_user_model
@@ -79,14 +80,28 @@ class StudentSerializer(ModelSerializer):
         fields = '__all__'
 
 
+class UserSerializer(ModelSerializer):
+    class Meta:
+        model = User#get_user_model()
+        fields = ['username','email','phone_number']
 
 class ScoreSerializer(ModelSerializer):
-    reg_date = serializers.DateField(format="%Y")
-    data_sum = serializers.SerializerMethodField()
-
-    def get_data_sum(self, obj):
-        return obj.math + obj.science + obj.english
+    #reg_user = UserSerializer()
+    username = serializers.ReadOnlyField(source='reg_user.username')
+    email = serializers.ReadOnlyField(source='reg_user.email')
+    phone_number = serializers.ReadOnlyField(source='reg_user.phone_number')
 
     class Meta:
         model = Scores
-        fields = '__all__'
+        fields = ['name','math','science','english','reg_user','username','email','phone_number']
+
+    # def validate_name(self, value):
+    #     #정규표현식, 숫자체크
+    #     if len(value) < 3:
+    #         raise ValidationError("3글자 이상 입력해주세요!")
+    #     return value
+
+    def validate(self, value):
+        if len(value['name']) < 3:
+            raise ValidationError("3글자 이상 입력해주세요!")
+        return value
