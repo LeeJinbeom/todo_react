@@ -8,6 +8,7 @@ class Students(models.Model):
     address = models.CharField(max_length=50)
     email = models.CharField(max_length=30)
     memo = models.CharField(max_length=300, null=True)
+    phone_number = models.CharField(max_length=13, null=True)
     reg_user = models.ForeignKey(get_user_model(), 
                                  on_delete=models.CASCADE)
 

@@ -4,6 +4,7 @@ from rest_framework import serializers
 from .models import Students, Scores
 from django.contrib.auth import get_user_model
 from account.models import User
+import re
 
 class ScoresBasicSerializer(Serializer):
     name = serializers.CharField()
@@ -53,18 +54,14 @@ class UserSerializer(ModelSerializer):
 
 class StudentSerializer(ModelSerializer):
 
-    reg_user_username = serializers.ReadOnlyField(source='reg_user.username')
-    reg_user_email = serializers.ReadOnlyField(source='reg_user.email')
-    reg_user = UserSerializer()
+    # reg_user_username = serializers.ReadOnlyField(source='reg_user.username')
+    # reg_user_email = serializers.ReadOnlyField(source='reg_user.email')
+    
+    # def get_test(self, obj):
+    #     return '내이름은 ' + obj.name
 
-    test = serializers.SerializerMethodField()
-    test2 = serializers.SerializerMethodField()
-
-    def get_test(self, obj):
-        return '내이름은 ' + obj.name
-
-    def get_test2(self, obj):
-        return '오호정'
+    # def get_test2(self, obj):
+    #     return '오호정'
 
     #reg_user = UserSerializer(read_only=True) #등록때 사용하지않겠다.
     # reg_user_username = serializers.ReadOnlyField(source='reg_user.username')
@@ -78,6 +75,21 @@ class StudentSerializer(ModelSerializer):
     class Meta:
         model = Students
         fields = '__all__'
+
+    def validate_email(self, value):
+        result = re.match("[a-zA-Z0-9]+@[a-zA-Z.0-9]+", value)
+        if result == None:
+            raise ValidationError("이메일 형식을 확인해주세요")
+        return value
+
+
+    def validate_phone_number(self, value):
+        result = re.match("[0-9]{3}-[0-9]{3,4}-[0-9]{3,4}", value)
+        if result == None:
+            raise ValidationError("전화번호 형식이 맞지않습니다.")
+        return value
+
+        
 
 
 class UserSerializer(ModelSerializer):
@@ -95,13 +107,18 @@ class ScoreSerializer(ModelSerializer):
         model = Scores
         fields = ['name','math','science','english','reg_user','username','email','phone_number']
 
+    def validate_math(self, math):
+        if not(0 < math < 100):
+            raise ValidationError("0~100 사이만 입력해주세요!")
+        return math
+
     # def validate_name(self, value):
     #     #정규표현식, 숫자체크
     #     if len(value) < 3:
     #         raise ValidationError("3글자 이상 입력해주세요!")
     #     return value
 
-    def validate(self, value):
-        if len(value['name']) < 3:
-            raise ValidationError("3글자 이상 입력해주세요!")
-        return value
+    # def validate(self, value):
+    #     if len(value['name']) < 3:
+    #         raise ValidationError("3글자 이상 입력해주세요!")
+    #     return value

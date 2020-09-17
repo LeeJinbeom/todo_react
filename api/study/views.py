@@ -9,48 +9,48 @@ from .serializers import StudentBasicSerializer, ScoresBasicSerializer, StudentS
 from rest_framework.response import Response
 
 
-@api_view(['GET','POST'])
-def ScoreBasicView(request):
-    if request.method == 'GET':
-        scores = Scores.objects.all()
-        print('1')
-        serializer = ScoresBasicSerializer(scores, many=True)
-        print('2')
-        return Response(serializer.data)
-    elif request.method == 'POST':
-        serializer = ScoresBasicSerializer(data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data, status=201)
-        return Response(serializer.errors, status=400)
+# @api_view(['GET','POST'])
+# def ScoreBasicView(request):
+#     if request.method == 'GET':
+#         scores = Scores.objects.all()
+#         print('1')
+#         serializer = ScoresBasicSerializer(scores, many=True)
+#         print('2')
+#         return Response(serializer.data)
+#     elif request.method == 'POST':
+#         serializer = ScoresBasicSerializer(data=request.data)
+#         if serializer.is_valid():
+#             serializer.save()
+#             return Response(serializer.data, status=201)
+#         return Response(serializer.errors, status=400)
 
 
-@api_view(['GET','POST'])
-def StudentBasicView(request):
-    if request.method == 'GET':
-        student = Students.objects.all()
-        serializer = StudentSerializer(student, many=True)
-        return Response(serializer.data)
-    elif request.method == 'POST':
-        serializer = StudentSerializer(data=request.data)
-        if serializer.is_valid():
-            #가공
-            serializer.save(memo="이건테스트입니다.")
-            return Response(serializer.data, status=201)
-        return Response(serializer.errors, status=400)
+# @api_view(['GET','POST'])
+# def StudentBasicView(request):
+#     if request.method == 'GET':
+#         student = Students.objects.all()
+#         serializer = StudentSerializer(student, many=True)
+#         return Response(serializer.data)
+#     elif request.method == 'POST':
+#         serializer = StudentSerializer(data=request.data)
+#         if serializer.is_valid():
+#             #가공
+#             serializer.save(memo="이건테스트입니다.")
+#             return Response(serializer.data, status=201)
+#         return Response(serializer.errors, status=400)
 
-@api_view(['PUT'])
-def StudentDetailBasicView(request, pk):
-    if request.method == 'PUT':
-        student = Students.objects.get(pk=pk)
-        #student 원래데이터
-        #request.data 사람이 보내준 데이터
-        #(원래데이터 <- 사람이 보내준 데이터) -> SAVE 
-        serializer = StudentBasicSerializer(student, data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data)
-        return Response(serializer.errors, status=400)
+# @api_view(['PUT'])
+# def StudentDetailBasicView(request, pk):
+#     if request.method == 'PUT':
+#         student = Students.objects.get(pk=pk)
+#         #student 원래데이터
+#         #request.data 사람이 보내준 데이터
+#         #(원래데이터 <- 사람이 보내준 데이터) -> SAVE 
+#         serializer = StudentBasicSerializer(student, data=request.data)
+#         if serializer.is_valid():
+#             serializer.save()
+#             return Response(serializer.data)
+#         return Response(serializer.errors, status=400)
 
 
 
