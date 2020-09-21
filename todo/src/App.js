@@ -8,6 +8,9 @@ import Message from 'Message';
 import Buttontest from 'Buttontest';
 import Students from 'Students';
 import Toggle from 'Toggle';
+import Add, { Add2, Add3 } from 'Add';
+import Gugudan from 'Gugudan';
+import TodoList from 'TodoList';
 
 
 function Parents()
@@ -188,7 +191,10 @@ function App() {
       <Toggle/> */}
       {/* <StateTest/> */}
       {/* <State1/> */}
-      <Parents/>
+      {/* <Parents/> */}
+      {/* <Add x={10} y={20}/>
+      <Gugudan x={3}/> */}
+      <TodoList/>
     </div>
   );
 }
