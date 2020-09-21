@@ -11,6 +11,8 @@ import Toggle from 'Toggle';
 import Add, { Add2, Add3 } from 'Add';
 import Gugudan from 'Gugudan';
 import TodoList from 'TodoList';
+import TestEvent from 'TestEvent';
+import Box from 'Box';
 
 
 function Parents()
@@ -185,6 +187,11 @@ function JsxTest() {
 
 function App() {
   //상태값
+
+  const click = () =>{
+    console.log("클릭했음");
+  }
+
   return (
     <div>
       {/* <Students/>
@@ -192,8 +199,11 @@ function App() {
       {/* <StateTest/> */}
       {/* <State1/> */}
       {/* <Parents/> */}
-      {/* <Add x={10} y={20}/>
-      <Gugudan x={3}/> */}
+      {/* <Add x={10} y={20}/>      
+      {/* <TodoList/> */}
+      {/* <TestEvent test={click}/> */}
+      {/* <Gugudan/> */}
+      {/* <Box/> */}
       <TodoList/>
     </div>
   );
