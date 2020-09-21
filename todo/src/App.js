@@ -16,6 +16,7 @@ import Box from 'Box';
 import CountArray from 'CountArray';
 import Clock from 'Clock';
 import Master from 'Master';
+import Timer from 'Timer';
 
 
 function Parents()
@@ -209,7 +210,8 @@ function App() {
       {/* <Box/> */}
       {/* <TodoList/> */}
       {/* <CountArray/> */}
-      <Master/>
+      {/* <Master/> */}
+      <Timer/>
     </div>
   );
 }
