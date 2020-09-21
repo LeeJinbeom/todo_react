@@ -13,6 +13,9 @@ import Gugudan from 'Gugudan';
 import TodoList from 'TodoList';
 import TestEvent from 'TestEvent';
 import Box from 'Box';
+import CountArray from 'CountArray';
+import Clock from 'Clock';
+import Master from 'Master';
 
 
 function Parents()
@@ -204,7 +207,9 @@ function App() {
       {/* <TestEvent test={click}/> */}
       {/* <Gugudan/> */}
       {/* <Box/> */}
-      <TodoList/>
+      {/* <TodoList/> */}
+      {/* <CountArray/> */}
+      <Master/>
     </div>
   );
 }
