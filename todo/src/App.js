@@ -23,6 +23,8 @@ import Game from 'Game';
 import TestReducer from 'TestReducer';
 import TestReducer2 from 'TestReducer2';
 import TestReducer3 from 'TestReducer3';
+import ContextApiTest from 'ContextApiTest';
+import ContextApiTest2 from 'ContextApiTest2';
 
 
 function Parents()
@@ -223,7 +225,9 @@ function App() {
       {/* <Game/> */}
       {/* <TestReducer/> */}
       {/* <TestReducer2/> */}
-      <TestReducer3/>
+      {/* <TestReducer3/> */}
+      {/* <ContextApiTest/> */}
+      <ContextApiTest2/>
     </div>
   );
 }
