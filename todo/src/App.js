@@ -20,6 +20,8 @@ import Timer from 'Timer';
 import CssTest1 from 'CssTest1';
 import CssTest2 from 'CssTest2';
 import Game from 'Game';
+import TestReducer from 'TestReducer';
+import TestReducer2 from 'TestReducer2';
 
 
 function Parents()
@@ -217,7 +219,9 @@ function App() {
       {/* <Timer/> */}
       {/* <CssTest1/>
       <CssTest2/> */}
-      <Game/>
+      {/* <Game/> */}
+      {/* <TestReducer/> */}
+      <TestReducer2/>
     </div>
   );
 }
