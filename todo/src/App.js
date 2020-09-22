@@ -22,6 +22,7 @@ import CssTest2 from 'CssTest2';
 import Game from 'Game';
 import TestReducer from 'TestReducer';
 import TestReducer2 from 'TestReducer2';
+import TestReducer3 from 'TestReducer3';
 
 
 function Parents()
@@ -221,7 +222,8 @@ function App() {
       <CssTest2/> */}
       {/* <Game/> */}
       {/* <TestReducer/> */}
-      <TestReducer2/>
+      {/* <TestReducer2/> */}
+      <TestReducer3/>
     </div>
   );
 }
