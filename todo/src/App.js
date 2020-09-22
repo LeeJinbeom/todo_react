@@ -17,6 +17,9 @@ import CountArray from 'CountArray';
 import Clock from 'Clock';
 import Master from 'Master';
 import Timer from 'Timer';
+import CssTest1 from 'CssTest1';
+import CssTest2 from 'CssTest2';
+import Game from 'Game';
 
 
 function Parents()
@@ -211,7 +214,10 @@ function App() {
       {/* <TodoList/> */}
       {/* <CountArray/> */}
       {/* <Master/> */}
-      <Timer/>
+      {/* <Timer/> */}
+      {/* <CssTest1/>
+      <CssTest2/> */}
+      <Game/>
     </div>
   );
 }
