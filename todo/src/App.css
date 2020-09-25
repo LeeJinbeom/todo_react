@@ -1,0 +1,11 @@
+
+
+#menu {
+    float: left;
+    height: 100%;
+}
+
+#content {
+    float: left;
+    padding: 50px;
+}
