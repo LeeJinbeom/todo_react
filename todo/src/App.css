@@ -6,6 +6,8 @@
 }
 
 #content {
+    box-sizing: border-box;
     float: left;
+    width: calc(100% - 256px);
     padding: 50px;
-}
+} 
