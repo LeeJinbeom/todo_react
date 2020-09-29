@@ -1,17 +1,7 @@
 import React from "react";
 import { List, Button, Modal } from 'antd';
 import { SearchOutlined, RestOutlined, PlusOutlined } from '@ant-design/icons';
-import {
-    Form,
-    Input,
-    Radio,
-    Select,
-    Cascader,
-    DatePicker,
-    InputNumber,
-    TreeSelect,
-    Switch,
-  } from 'antd';
+import { Form, Input, Select, DatePicker } from 'antd';
 import API from 'Api';
 
 export default function Todo(){
@@ -83,6 +73,18 @@ export default function Todo(){
             }
         )
     }
+
+    const deleteTodo = (seq) => {
+
+        API.delete("todo/todo/" + seq).then(res=>{
+            return API.get("todo/allTodo")
+        }).then(
+            res=>{
+                const {data} = res;
+                setTodos(prev => data);
+            }
+        )
+    }
  
 
     return (
@@ -102,7 +104,7 @@ export default function Todo(){
                 title={<span>{item.name}</span>}
                 description={<>
                                 <span>{item.group_name}</span> / <span>{item.reg_date}</span>
-                                <Button style={{float:"right"}} shape="circle" icon={<RestOutlined />} />
+                                <Button onClick={()=>{deleteTodo(item.seq)}} style={{float:"right"}} shape="circle" icon={<RestOutlined />} />
                             </>
                             }
                 />
@@ -120,7 +122,7 @@ export default function Todo(){
                 title={<span>{item.name}</span>}
                 description={<>
                                 <span>{item.group_name}</span> / <span>{item.reg_date}</span>
-                                <Button style={{float:"right"}} shape="circle" icon={<RestOutlined />} />
+                                <Button onClick={()=>{deleteTodo(item.seq)}} style={{float:"right"}} shape="circle" icon={<RestOutlined />} />
                             </>
                             }
                 />
@@ -138,7 +140,7 @@ export default function Todo(){
                 title={<span>{item.name}</span>}
                 description={<>
                                 <span>{item.group_name}</span> / <span>{item.reg_date}</span>
-                                <Button style={{float:"right"}} shape="circle" icon={<RestOutlined />} />
+                                <Button onClick={()=>{deleteTodo(item.seq)}} style={{float:"right"}} shape="circle" icon={<RestOutlined />} />
                             </>
                             }
                 />
