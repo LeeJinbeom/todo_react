@@ -1,10 +1,11 @@
 import React from "react";
 import { Form, Input, Button, Checkbox, message } from 'antd';
 import API from 'Api';
+import LoginContext from './Util';
 
 export default function Login() {
 
-
+  const login = React.useContext(LoginContext);
   const [form] = Form.useForm();
     
   const layout = {
@@ -20,6 +21,7 @@ export default function Login() {
     API.post("account/api-jwt-auth", values)
     .then(res=>{
         window.localStorage.setItem("token", res.data.token)
+        login.setIsLogin(true);
     }).catch(error=>{
         message.info('아이디, 패스워드를 확인해주세요');
     })

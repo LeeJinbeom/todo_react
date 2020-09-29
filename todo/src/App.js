@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import 'App.css';
 import 'antd/dist/antd.css';
 import { Menu } from 'antd';
@@ -10,10 +10,24 @@ import FavouriteGroup from 'pages/Favouritegroup';
 import Todo from 'pages/Todo';
 import TodoGroup from 'pages/Todogroup';
 import Login from 'account/Login';
+import LoginContext from 'account/Util'
 
 const { SubMenu } = Menu;
 
+
 function App() {
+
+  const [isLogin, setIsLogin] = React.useState(false);
+
+  useEffect(()=>{
+
+    const token = window.localStorage.getItem("token")
+
+    if (token!=null){
+      setIsLogin(true);
+    }
+
+  },[]);
 
   const handleClick = e => {
     console.log('click ', e);
@@ -21,6 +35,7 @@ function App() {
 
   return (
     <>
+    <LoginContext.Provider value={{isLogin, setIsLogin}}>
     <div id="menu">
     <Menu
         onClick={handleClick}
@@ -64,6 +79,9 @@ function App() {
       </Menu>
     </div>
     <div id="content">
+      <div>
+        { isLogin ? <div>로그인됨</div> : <div>로그인안됨</div> }
+      </div>
       <Switch>
         <Route exact path="/" component={Favourite}/>
         <Route path="/favourite" component={Favourite}/>
@@ -73,6 +91,7 @@ function App() {
         <Route path="/Login" component={Login}/>          
       </Switch>
     </div>
+    </LoginContext.Provider>
     </>
   );
 }

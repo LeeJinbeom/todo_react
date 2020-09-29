@@ -3,6 +3,7 @@ import { List, Button, Modal } from 'antd';
 import { SearchOutlined, RestOutlined, PlusOutlined } from '@ant-design/icons';
 import { Form, Input, Select, DatePicker } from 'antd';
 import API from 'Api';
+import { getToken } from 'account/Util';
 
 export default function Todo(){
 
@@ -22,7 +23,11 @@ export default function Todo(){
 
     React.useEffect(()=>{
 
-        API.get("todo/allTodo").then(res=>{
+        API.get("todo/allTodo", {
+            headers: {
+                Authorization: "JWT " + getToken()
+            }
+        }).then(res=>{
             const {data} = res;
             setTodos(prev => data);
         })

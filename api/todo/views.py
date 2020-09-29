@@ -1,6 +1,7 @@
 from django.shortcuts import render
-from rest_framework.decorators import api_view
+from rest_framework.decorators import api_view, permission_classes
 from rest_framework import viewsets
+from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet
 from .models import TodoGroup, Todo, FavouriteGroup, Favourite
@@ -9,6 +10,7 @@ from .serializers import TodoGroupSerializer, TodoSerializer, FavouriteGroupSeri
 # Create your views here.
 
 @api_view(['GET'])
+@permission_classes([IsAuthenticated])
 def TodoAllSelectView(request):
     if request.method == 'GET':
         todo = Todo.objects.all()
@@ -28,7 +30,7 @@ class TodoGroupView(ModelViewSet):
 class TodoView(ModelViewSet):
     queryset = Todo.objects.all()
     serializer_class = TodoSerializer
-
+    # permission_classes = [IsAuthenticated]
     
     def get_queryset(self):
         qs = super().get_queryset()
