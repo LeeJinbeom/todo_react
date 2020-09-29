@@ -13,28 +13,9 @@ export default function Todo(){
 
     React.useEffect(()=>{
 
-        API.get("todo/todo?status=pending").then(res=>{
+        API.get("todo/allTodo").then(res=>{
             const {data} = res;
-            setTodos(prev => ({
-                ...prev,
-                pending:data
-            }));
-        })
-
-        API.get("todo/todo?status=inprogress").then(res=>{
-            const {data} = res;
-            setTodos(prev => ({
-                ...prev,
-                inprogress:data
-            }));
-        })
-
-        API.get("todo/todo?status=end").then(res=>{
-            const {data} = res;
-            setTodos(prev => ({
-                ...prev,
-                end:data
-            }));
+            setTodos(prev => data);
         })
 
     },[])
