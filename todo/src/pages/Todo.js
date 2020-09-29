@@ -39,6 +39,13 @@ export default function Todo(){
     },[])
 
     const showModal = () => {
+
+        // API.get("todo/todo/2").then(res=>{
+        //     res.data.end_date = new Date(res.data.end_date);
+        //     form.setFieldsValue(res.data);
+            
+        // });
+
         setState({
           visible: true,
         });

@@ -9,6 +9,7 @@ import Favourite from 'pages/Favourite';
 import FavouriteGroup from 'pages/Favouritegroup';
 import Todo from 'pages/Todo';
 import TodoGroup from 'pages/Todogroup';
+import Login from 'account/Login';
 
 const { SubMenu } = Menu;
 
@@ -68,7 +69,8 @@ function App() {
         <Route path="/favourite" component={Favourite}/>
         <Route path="/favouritegroup" component={FavouriteGroup}/>                
         <Route path="/todo" component={Todo}/>
-        <Route path="/todoGroup" component={TodoGroup}/>            
+        <Route path="/todoGroup" component={TodoGroup}/>  
+        <Route path="/Login" component={Login}/>          
       </Switch>
     </div>
     </>
