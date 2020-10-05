@@ -30,7 +30,7 @@ class TodoGroupView(ModelViewSet):
 class TodoView(ModelViewSet):
     queryset = Todo.objects.all()
     serializer_class = TodoSerializer
-    # permission_classes = [IsAuthenticated]
+    #permission_classes = [IsAuthenticated]
     
     def get_queryset(self):
         qs = super().get_queryset()

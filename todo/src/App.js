@@ -5,6 +5,7 @@ import { Menu } from 'antd';
 import { AppstoreOutlined, MailOutlined, SettingOutlined } from '@ant-design/icons';
 import { BrowserRouter, Route, Link, NavLink, Switch } from 'react-router-dom';
 
+import Empty from 'Empty';
 import Favourite from 'pages/Favourite';
 import FavouriteGroup from 'pages/Favouritegroup';
 import Todo from 'pages/Todo';
@@ -25,13 +26,20 @@ function App() {
 
     if (token!=null){
       setIsLogin(true);
+    }else{
+      setIsLogin(false);
     }
-
-  },[]);
+    
+  });
 
   const handleClick = e => {
     console.log('click ', e);
   };
+
+  const logout = () => {
+    window.localStorage.removeItem("token");
+    setIsLogin(false);
+  }
 
   return (
     <>
@@ -80,7 +88,14 @@ function App() {
     </div>
     <div id="content">
       <div>
-        { isLogin ? <div>로그인됨</div> : <div>로그인안됨</div> }
+        { isLogin ? 
+          <div>
+            <a onClick={logout}>로그아웃</a>
+          </div> : 
+          <div>
+            <Link to="/login">로그인</Link>
+          </div>
+        }
       </div>
       <Switch>
         <Route exact path="/" component={Favourite}/>
@@ -88,8 +103,9 @@ function App() {
         <Route path="/favouritegroup" component={FavouriteGroup}/>                
         <Route path="/todo" component={Todo}/>
         <Route path="/todoGroup" component={TodoGroup}/>  
-        <Route path="/Login" component={Login}/>          
+        <Route path="/Login" component={Login}/>       
       </Switch>
+      <Route path="/" component={Empty}/>
     </div>
     </LoginContext.Provider>
     </>

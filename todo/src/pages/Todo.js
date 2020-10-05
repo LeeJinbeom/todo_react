@@ -25,7 +25,7 @@ export default function Todo(){
 
         API.get("todo/allTodo", {
             headers: {
-                Authorization: "JWT " + getToken()
+                Authorization: "JWT " + window.localStorage.getItem("token")//getToken()
             }
         }).then(res=>{
             const {data} = res;
