@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import jwt from 'jwt-decode';
 import 'App.css';
 import 'antd/dist/antd.css';
 import { Menu } from 'antd';
@@ -24,8 +25,22 @@ function App() {
 
     const token = window.localStorage.getItem("token")
 
+    
+
     if (token!=null){
-      setIsLogin(true);
+
+      const decode_token = jwt(token);
+      const now = new Date();
+      
+
+      if(decode_token.exp * 1000 < now.getTime())
+      {        
+        console.log("기간이 지난토큰");
+        window.localStorage.removeItem("token");
+        setIsLogin(false);
+      }
+        
+
     }else{
       setIsLogin(false);
     }

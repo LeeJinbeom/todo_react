@@ -9,6 +9,8 @@
     "@testing-library/user-event": "^7.1.2",
     "antd": "^4.6.4",
     "axios": "^0.20.0",
+    "jwt-decode": "^3.0.0",
+    "jwt-token": "^1.0.9",
     "query-string": "^6.13.2",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
