@@ -14,6 +14,7 @@ class Todo(models.Model):
     reg_date = models.DateField(auto_now_add=True)
     end_date = models.DateField(blank=True)
     del_yn = models.BooleanField(default=False)
+    image = models.ImageField(null=True, upload_to='%Y/%m')
     group = models.ForeignKey(TodoGroup, on_delete=models.CASCADE)
 
 class FavouriteGroup(models.Model):

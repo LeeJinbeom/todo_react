@@ -1,7 +1,7 @@
 import React from "react";
 import { List, Button, Modal } from 'antd';
-import { SearchOutlined, RestOutlined, PlusOutlined } from '@ant-design/icons';
-import { Form, Input, Select, DatePicker } from 'antd';
+import { SearchOutlined, RestOutlined, PlusOutlined, UploadOutlined } from '@ant-design/icons';
+import { Form, Input, Select, DatePicker, Upload } from 'antd';
 import API from 'Api';
 import { getToken } from 'account/Util';
 
@@ -14,12 +14,14 @@ export default function Todo(){
     });
 
     const [form] = Form.useForm();
-
     const [group, setGroup] = React.useState([]);
-
     const [state, setState] = React.useState({
         visible: false
     })
+    const [fileList, setFileList] = React.useState({
+        fileList: [],
+        uploading: false,
+      })
 
     React.useEffect(()=>{
 
@@ -29,6 +31,7 @@ export default function Todo(){
             }
         }).then(res=>{
             const {data} = res;
+            console.log(data);
             setTodos(prev => data);
         })
 
@@ -38,6 +41,7 @@ export default function Todo(){
 
         API.get("todo/todogroup").then(res=>{
             const {data} = res;
+            console.log(data);
             setGroup(prev => data);
         })
 
@@ -69,10 +73,18 @@ export default function Todo(){
       };
 
     const onFinish = e => {        
-        e.end_date = e.end_date.format("YYYY-MM-DD")
-        console.log(e);
 
-        API.post("todo/todo/", e).then(res=>{
+        const formData = new FormData();
+
+        formData.append("end_date", e.end_date.format("YYYY-MM-DD"));
+        formData.append("name", e.name);
+        formData.append("status", e.status);
+        formData.append("group", e.group);
+        formData.append("image", fileList.fileList[0]);
+
+        e.end_date = e.end_date.format("YYYY-MM-DD")
+
+        API.post("todo/todo/", formData).then(res=>{
             return API.get("todo/allTodo")
         }).then(
             res=>{
@@ -97,6 +109,26 @@ export default function Todo(){
             }
         )
     }
+
+    const props = {
+        onRemove: file => {
+        setFileList(state => {
+            const index = state.fileList.indexOf(file);
+            const newFileList = state.fileList.slice();
+            newFileList.splice(index, 1);
+            return {
+              fileList: newFileList,
+            };
+          });
+        },
+        beforeUpload: file => {
+          setFileList(state => ({
+            fileList: [...state.fileList, file],
+          }));
+          return false;
+        },
+        fileList: fileList.fileList,
+      };
  
 
     return (
@@ -179,8 +211,13 @@ export default function Todo(){
             <Select.Option value="end">완료</Select.Option>
           </Select>
         </Form.Item>
-            <Form.Item  name="end_date" label="종료일">
+        <Form.Item  name="end_date" label="종료일">
             <DatePicker />
+        </Form.Item>
+        <Form.Item  name="image" label="이미지">
+            <Upload {...props}>
+                <Button icon={<UploadOutlined />}>Select File</Button>
+            </Upload>
         </Form.Item>
         <Form.Item name="group" label="그룹">
           <Select>
