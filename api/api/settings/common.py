@@ -81,12 +81,15 @@ WSGI_APPLICATION = 'api.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/3.1/ref/settings/#databases
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
-    }
-}
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.sqlite3',
+#         'NAME': BASE_DIR / 'db.sqlite3',
+#     }
+# }
+
+from . import private_mysql
+DATABASES = private_mysql.DATABASES
 
 
 # Password validation
@@ -147,3 +150,19 @@ CORS_ORIGIN_ALLOW_ALL = True
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+
+
+from . import private_s3
+
+AWS_ACCESS_KEY_ID = private_s3.AWS_ACCESS_KEY_ID
+AWS_SECRET_ACCESS_KEY = private_s3.AWS_SECRET_ACCESS_KEY
+AWS_REGION = private_s3.AWS_REGION
+AWS_STORAGE_BUCKET_NAME = private_s3.AWS_STORAGE_BUCKET_NAME
+
+AWS_S3_CUSTOM_DOMAIN = '%s.s3.%s.amazonaws.com' % (AWS_STORAGE_BUCKET_NAME,AWS_REGION)
+
+AWS_S3_OBJECT_PARAMETERS = {
+    'CacheControl':'max-age=86400',
+}
+
+DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'

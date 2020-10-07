@@ -3,3 +3,6 @@ djangorestframework
 djangorestframework-jwt
 django-cors-headers
 Pillow
+mysqlclient
+boto3
+django-storages
